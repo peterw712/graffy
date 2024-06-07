@@ -1,0 +1,45 @@
+<!-- File: index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Graffy</title>
+</head>
+<body>
+  <h1>Graffy</h1>
+  <textarea id="document" rows="20" cols="100"></textarea>
+  <br>
+  <button onclick="saveDocument()">Save</button>
+  <button onclick="clearDocument()">Clear</button>
+
+  <script>
+    async function fetchDocument() {
+      const response = await fetch('http://localhost:3000/document');
+      const data = await response.json();
+      document.getElementById('document').value = data.content;
+    }
+
+    async function saveDocument() {
+      const content = document.getElementById('document').value;
+      await fetch('http://localhost:3000/document', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content }),
+      });
+    }
+
+    async function clearDocument() {
+      await fetch('http://localhost:3000/document', {
+        method: 'DELETE',
+      });
+      document.getElementById('document').value = '';
+    }
+
+    // Fetch document content on load
+    window.onload = fetchDocument;
+  </script>
+</body>
+</html>
